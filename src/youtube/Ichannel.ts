@@ -74,7 +74,8 @@ export declare module IChannel {
       default: string,
       medium: string,
       high: string,
-    }
+    },
+    country: string
   }
 
 }
