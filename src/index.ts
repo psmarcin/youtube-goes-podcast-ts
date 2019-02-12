@@ -14,7 +14,6 @@ app.use(error5xxHandler)
 
 function serverCallback():void{
   log.info(`[SERVER] Listening on port: ${config.port}`)
-  log.info(`[CONFIG] ${JSON.stringify(config)}`)
 }
 
 app.listen(config.port, serverCallback)

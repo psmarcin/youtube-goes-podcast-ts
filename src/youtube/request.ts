@@ -1,10 +1,11 @@
 import { RequestAPI, Request, CoreOptions, RequiredUriUrl } from "request";
-import { defaults, RequestPromise } from "request-promise-native";
+import { defaults } from "request-promise-native";
 import config from './../config'
 
+console.log(' config.youtubeApiKey', config.youtubeApiKey)
 const request: RequestAPI<Request, CoreOptions, RequiredUriUrl> = defaults({
   baseUrl: `https://www.googleapis.com/youtube/v3/`,
-  qs:{
+  qs: {
     key: config.youtubeApiKey
   },
   json: true
