@@ -1,5 +1,6 @@
 import Joi, { ValidationResult } from 'joi'
 import request from 'request'
+import requestPromis from 'request-promise-native'
 import Boom from 'boom'
 import { Request, Response, Router, NextFunction } from "express";
 import { get, serialize } from "./youtube/channel";
@@ -11,6 +12,7 @@ import ytdl from 'ytdl-core'
 
 const router = Router({})
 const startedAt = new Date()
+const itags = ['140']
 
 
 router.get('/', (req: Request, res: Response): void => {
@@ -39,27 +41,56 @@ router.get('/feed/channel/:channelId', async (req: Request, res: Response, next:
   }
 })
 
-const allowedKeys = ['range', 'if-range', 'transfer-encoding']
+const allowedKeys = ['range', 'if-range', 'transfer-encoding', 'content-range', 'accept-ranges']
+const headerKeysBlacklist = ['host']
 const filterHeaders = (headers:any) => {
-  return Object.keys(headers)
-    .filter(e => allowedKeys.includes(e.toLocaleLowerCase()))
-    .reduce((acc:any, key) => {
-      acc[key] = headers[key]
-      return acc
-    }, {})
+  headerKeysBlacklist.forEach((key)=>{
+    headers[key] = undefined
+  })
+  return headers
 }
 
 router.use('/video/:videoId', (req: Request, res: Response) => {
-  ytdl.getInfo(req.params.videoId, (err, info)=>{
-    if(err) throw err
-    const audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
-    const options = {
-      method: req.method,
-      uri: audioFormats[0].url,
-      headers: filterHeaders(req.headers)
-    }
-    request(options).pipe(res)
-  })
+  try {
+    
+    ytdl.getInfo(req.params.videoId, async (err, info)=>{
+      if(err) throw err
+      const format = info.formats.find((f)=>(itags.includes(f.itag)))
+      if(!format){
+        throw Boom.badRequest(`Can't find audio format`)
+      }
+      log.info(filterHeaders(req.headers), `[VIDEO] Headers`)
+      const headOptions = {
+        method: 'HEAD',
+        uri: format.url,
+        headers: filterHeaders(req.headers)
+      }
+      const response = await requestPromis(headOptions)
+      log.info(response, `response`)
+      // res.status(206)
+      
+      if(req.method === 'GET'){
+        const options = {
+          method: 'GET',
+          uri: format.url,
+          headers: filterHeaders(req.headers)
+        }
+        return request(options).on('response', (r)=>{
+          log.info(r.statusCode.toString(), `[VIDEO] response`)
+          res.status(r.statusCode)
+          res.set(r.headers)
+          log.info(r.headers, `[VIDEO] Head response`)
+          // res.end()
+        })
+        .pipe(res, { end: true })
+      } else {
+        res.set(response)
+        res.end()
+      }
+    })
+  } catch (error) {
+    throw Boom.boomify(error)
+  }
 })
 
 export default router

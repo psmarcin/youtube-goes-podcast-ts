@@ -90,8 +90,8 @@ function serializeItem(item: IVideo.Video, order: number): object {
     pubDate: item.publishedAt.toISOString(),
     enclosure: {
       '@url': `${VIDEO_DIRECT_BASE_URL}${item.id}`,
-      '@type': item.videoDetails.contentType,
-      '@length': item.videoDetails.contentLength
+      '@type': item.videoDetails.contentType || 'unknown',
+      '@length': item.videoDetails.contentLength || 0
     },
     'itunes:author': item.channelId,
     'itunes:subtitle': item.title,
