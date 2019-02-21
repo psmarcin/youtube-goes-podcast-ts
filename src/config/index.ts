@@ -14,8 +14,8 @@ const envVariablesSchema: JoiObject = Joi.object({
   PORT: Joi.string().optional()
 })
 
-const res: Joi.ValidationResult<any> = Joi.validate({ 
-  YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY, 
+const res: Joi.ValidationResult<any> = Joi.validate({
+  YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
   PORT: process.env.PORT }, envVariablesSchema)
 
 if (res.error) {
@@ -31,7 +31,5 @@ if (res.value) {
     port: res.value.PORT || '8080'
   }
 }
-
-log.info(mappedConfig,`[CONFIG]`)
 
 export default mappedConfig

@@ -1,11 +1,10 @@
 import Boom from 'boom'
-import xml, { XMLElementOrXMLNode } from "xmlbuilder";
 import { head } from "request-promise-native";
 import request from './request'
 import { IVideo } from './Ivideo'
 
 const VIDEO_BASE_URL = `https://youtube.com/watch?v=`
-const VIDEO_DIRECT_BASE_URL = `https://podcasts.psmarcin.me/video/`
+const VIDEO_DIRECT_BASE_URL = `http://youtube-goes-podcast-proxy.herokuapp.com/`
 const TRANSCODE_BASE_URL = `https://transcoder.plex.tv/photo?height=1500&minSize=1&width=1500&upscale=1&url=`
 
 export async function getAll(channelId: string): Promise<IVideo.Video[]> {
@@ -14,6 +13,8 @@ export async function getAll(channelId: string): Promise<IVideo.Video[]> {
     response = await request.get('search', {
       qs: {
         part: 'snippet',
+        order: 'date',
+        maxResults: 10,
         channelId,
       }
     })
@@ -89,7 +90,7 @@ function serializeItem(item: IVideo.Video, order: number): object {
     description: item.description,
     pubDate: item.publishedAt.toISOString(),
     enclosure: {
-      '@url': `${VIDEO_DIRECT_BASE_URL}${item.id}`,
+      '@url': `${VIDEO_DIRECT_BASE_URL}${item.id}.mp3`,
       '@type': item.videoDetails.contentType || 'unknown',
       '@length': item.videoDetails.contentLength || 0
     },
