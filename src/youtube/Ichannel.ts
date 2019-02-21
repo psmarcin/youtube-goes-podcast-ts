@@ -45,11 +45,13 @@ export declare module IChannel {
     localized: Localized;
     country: string;
   }
-
+  export interface ID {
+    channelId: string
+  }
   export interface Item {
     kind: string;
     etag: string;
-    id: string;
+    id: ID;
     snippet: Snippet;
   }
 
@@ -78,4 +80,9 @@ export declare module IChannel {
     country: string
   }
 
+  export interface SerializedChannel {
+    title: string,
+    channelId: string,
+    thumbnail: string
+  }
 }

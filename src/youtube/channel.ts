@@ -44,7 +44,34 @@ export async function get(channelId: string): Promise<IChannel.Channel> {
   }
 
   return channel
+}
 
+export async function getAll(query: string): Promise<IChannel.Item[]>{
+  let response: any;
+  try {
+    response = await request.get('search', {
+      qs: {
+        fields: 'items(id,snippet(channelId,channelTitle,thumbnails/default,title))',
+        order: 'viewCount',
+        part: 'snippet',
+        q: query,
+        type: 'channel',
+      }
+    })
+  } catch (error) {
+    throw Boom.boomify(error)
+  }
+  return response.items
+}
+
+export function serializeJSON(channels: IChannel.Item[]):IChannel.SerializedChannel[]{
+  return channels.map((channel)=>{
+    return {
+      title: channel.snippet.title,
+      channelId: channel.id.channelId,
+      thumbnail: channel.snippet.thumbnails.default.url
+    }
+  })
 }
 
 export function serialize(channel: IChannel.Channel, items: object[]): XMLElementOrXMLNode {
@@ -139,9 +166,9 @@ export function serialize(channel: IChannel.Channel, items: object[]): XMLElemen
         item: items
       },
     }
-  }, 
-  { version: '1.0', encoding: 'UTF-8', standalone: true }, 
-  {}, 
+  },
+  { version: '1.0', encoding: 'UTF-8', standalone: true },
+  {},
   { headless: false })
 
   return xmlString
