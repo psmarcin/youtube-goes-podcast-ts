@@ -135,7 +135,7 @@ export function serialize(channel: IChannel, items: object[]): XMLElementOrXMLNo
           "@url": `${TRANSCODE_BASE_URL}${channel.thumbnails.high}`,
         },
         "itunes:author": {
-          "#text": channel.customUrl,
+          "#text": channel.customUrl || " ",
         },
         "itunes:type": {
           "#text": "episodic",
@@ -154,7 +154,7 @@ export function serialize(channel: IChannel, items: object[]): XMLElementOrXMLNo
           "#text": "clean",
         },
         "itunes:owner": {
-          "itunes:name": channel.customUrl,
+          "itunes:name": channel.customUrl || " ",
         },
         "item": items,
         "title": {
