@@ -1,175 +1,174 @@
-import request from './request'
-import { IChannel } from './Ichannel'
-import { IVideo } from './Ivideo'
-import Boom from 'boom'
+import Boom from "boom";
 import xml, { XMLElementOrXMLNode } from "xmlbuilder";
+import { IChannel, IItem, IRoot, ISerializedChannel, ISnippet } from "./Ichannel";
+import request from "./request";
 
-const CHANNEL_BASE_URL = `https://youtube.com/channel/`
-const TRANSCODE_BASE_URL = `https://transcoder.plex.tv/photo?height=1500&minSize=1&width=1500&upscale=1&url=`
+const CHANNEL_BASE_URL = `https://youtube.com/channel/`;
+const TRANSCODE_BASE_URL = `https://transcoder.plex.tv/photo?height=1500&minSize=1&width=1500&upscale=1&url=`;
 
-export async function get(channelId: string): Promise<IChannel.Channel> {
+export async function get(channelId: string): Promise<IChannel> {
   let response: any;
 
   try {
-    response = await request.get('channels', {
+    response = await request.get("channels", {
       qs: {
-        part: 'snippet',
-        id: channelId
-      }
-    })
+        id: channelId,
+        part: "snippet",
+      },
+    });
   } catch (error) {
-    throw Boom.boomify(error)
+    throw Boom.boomify(error);
   }
 
-  const resp: IChannel.Root = response
+  const resp: IRoot = response;
 
   if (!resp.items || !resp.items.length) {
-    throw Boom.badRequest(`Can't find channel with id ${channelId}`)
+    throw Boom.badRequest(`Can't find channel with id ${channelId}`);
   }
 
-  const snippet: IChannel.Snippet = resp.items[0].snippet
+  const snippet: ISnippet = resp.items[0].snippet;
 
-  const channel: IChannel.Channel = {
-    id: channelId,
+  const channel: IChannel = {
+    country: snippet.country,
     customUrl: snippet.customUrl,
     description: snippet.description,
+    id: channelId,
     publishedAt: new Date(snippet.publishedAt),
     thumbnails: {
       default: snippet.thumbnails.default.url,
-      medium: snippet.thumbnails.medium.url,
       high: snippet.thumbnails.high.url,
+      medium: snippet.thumbnails.medium.url,
     },
     title: snippet.title,
-    country: snippet.country
-  }
+  };
 
-  return channel
+  return channel;
 }
 
-export async function getAll(query: string): Promise<IChannel.Item[]>{
+export async function getAll(query: string): Promise<IItem[]> {
   let response: any;
   try {
-    response = await request.get('search', {
+    response = await request.get("search", {
       qs: {
-        fields: 'items(id,snippet(channelId,channelTitle,thumbnails/default,title))',
-        order: 'viewCount',
-        part: 'snippet',
+        fields: "items(id,snippet(channelId,channelTitle,thumbnails/default,title))",
+        order: "viewCount",
+        part: "snippet",
         q: query,
-        type: 'channel',
-      }
-    })
+        type: "channel",
+      },
+    });
   } catch (error) {
-    throw Boom.boomify(error)
+    throw Boom.boomify(error);
   }
-  return response.items
+  return response.items;
 }
 
-export function serializeJSON(channels: IChannel.Item[]):IChannel.SerializedChannel[]{
-  return channels.map((channel)=>{
+export function serializeJSON(channels: IItem[]): ISerializedChannel[] {
+  return channels.map((channel) => {
     return {
-      title: channel.snippet.title,
       channelId: channel.id.channelId,
-      thumbnail: channel.snippet.thumbnails.default.url
-    }
-  })
+      thumbnail: channel.snippet.thumbnails.default.url,
+      title: channel.snippet.title,
+    };
+  });
 }
 
-export function serialize(channel: IChannel.Channel, items: object[]): XMLElementOrXMLNode {
+export function serialize(channel: IChannel, items: object[]): XMLElementOrXMLNode {
   const xmlString: XMLElementOrXMLNode = xml.create({
     rss: {
-      '@xmlns:atom': "http://www.w3.org/2005/Atom",
-      '@xmlns:itunes': "http://www.itunes.com/dtds/podcast-1.0.dtd",
-      '@xmlns:media': "http://search.yahoo.com/mrss/",
-      '@xmlns:sy': "http://purl.org/rss/1.0/modules/syndication/",
-      '@xmlns:content': "http://purl.org/rss/1.0/modules/content/",
-      '@version': "2.0",
-      channel: {
-        title: {
-          '#text': channel.title,
+      "@version": "2.0",
+      "@xmlns:atom": "http://www.w3.org/2005/Atom",
+      "@xmlns:content": "http://purl.org/rss/1.0/modules/content/",
+      "@xmlns:itunes": "http://www.itunes.com/dtds/podcast-1.0.dtd",
+      "@xmlns:media": "http://search.yahoo.com/mrss/",
+      "@xmlns:sy": "http://purl.org/rss/1.0/modules/syndication/",
+      "channel": {
+        "itunes:subtitle": {
+          "#text": channel.title,
         },
-        'itunes:subtitle': {
-          '#text': channel.title,
+        "link": {
+          "#text": `${CHANNEL_BASE_URL}/${channel.id}`,
         },
-        link: {
-          '#text': `${CHANNEL_BASE_URL}/${channel.id}`
+        "pubDate": {
+          "#text": channel.publishedAt && channel.publishedAt.toISOString(),
         },
-        pubDate: {
-          '#text': channel.publishedAt.toISOString()
+        "language": {
+          "#text": channel.country ? channel.country.toLocaleLowerCase() : 'en',
         },
-        lastBuildDate: {
-          '#text': channel.publishedAt.toISOString()
+        "lastBuildDate": {
+          "#text": channel.publishedAt && channel.publishedAt.toISOString(),
         },
-        ttl: {
-          '#text': '60'
+        "copyright": {
+          "#text": `© ${new Date().getFullYear()}`,
         },
-        language: {
-          '#text': channel.country.toLocaleLowerCase()
+        "media:copyright": {
+          "#text": `© ${new Date().getFullYear()}`,
         },
-        copyright: {
-          '#text': `© ${new Date().getFullYear()}`
+        "description": {
+          "#text": channel.description,
         },
-        'media:copyright': {
-          '#text': `© ${new Date().getFullYear()}`
+        "itunes:summary": {
+          "#text": channel.description,
         },
-        description: {
-          '#text': channel.description
+        "generator": {
+          "#text": "youtube-goes-podcast@v1.0.0",
         },
-        'itunes:summary': {
-          '#text': channel.description
-        },
-        generator: {
-          '#text': 'youtube-goes-podcast@v1.0.0'
-        },
-        image: {
+        "image": {
           url: {
-            '#text': `${TRANSCODE_BASE_URL}${channel.thumbnails.high}`
+            "#text": `${TRANSCODE_BASE_URL}${channel.thumbnails.high}`,
           },
           title: {
-            '#text': channel.title
+            "#text": channel.title,
           },
           link: {
-            '#text': `${CHANNEL_BASE_URL}${channel.id}`
+            "#text": `${CHANNEL_BASE_URL}${channel.id}`,
           },
           width: {
-            '#text': 800
+            "#text": 800,
           },
           height: {
-            '#text': 800
-          }
+            "#text": 800,
+          },
         },
-        'media:thumbnail': {
-          '@href': `${TRANSCODE_BASE_URL}${channel.thumbnails.high}`,
-          '@url': `${TRANSCODE_BASE_URL}${channel.thumbnails.high}`
+        "media:thumbnail": {
+          "@href": `${TRANSCODE_BASE_URL}${channel.thumbnails.high}`,
+          "@url": `${TRANSCODE_BASE_URL}${channel.thumbnails.high}`,
         },
-        'itunes:author': {
-          '#text': channel.customUrl
+        "itunes:author": {
+          "#text": channel.customUrl,
         },
-        'itunes:type': {
-          '#text': 'episodic'
+        "itunes:type": {
+          "#text": "episodic",
         },
-        'itunes:category': {
-          '@text': 'News &amp; Politics'
+        "itunes:category": {
+          "@text": "News &amp; Politics",
         },
-        'media:category': {
-          '@scheme': 'http://www.itunes.com/dtds/podcast-1.0.dtd',
-          '@text': 'News &amp; Politics'
+        "media:category": {
+          "@scheme": "http://www.itunes.com/dtds/podcast-1.0.dtd",
+          "@text": "News &amp; Politics",
         },
-        'itunes:image': {
-          '@href': channel.thumbnails.high
+        "itunes:image": {
+          "@href": channel.thumbnails.high,
         },
-        'itunes:explicit': {
-          '#text': 'clean'
+        "itunes:explicit": {
+          "#text": "clean",
         },
-        'itunes:owner': {
-          'itunes:name': channel.customUrl
+        "itunes:owner": {
+          "itunes:name": channel.customUrl,
         },
-        item: items
+        "item": items,
+        "title": {
+          "#text": channel.title,
+        },
+        "ttl": {
+          "#text": "60",
+        },
       },
-    }
+    },
   },
-  { version: '1.0', encoding: 'UTF-8', standalone: true },
+  { version: "1.0", encoding: "UTF-8", standalone: true },
   {},
-  { headless: false })
+  { headless: false });
 
-  return xmlString
+  return xmlString;
 }

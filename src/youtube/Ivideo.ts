@@ -1,40 +1,38 @@
-export declare module IVideo {
-
-  export interface PageInfo {
+  export interface IPageInfo {
     totalResults: number;
     resultsPerPage: number;
   }
 
-  export interface Id {
+  export interface IId {
     kind: string;
     videoId: string;
   }
 
-  export interface Default {
+  export interface IDefault {
     url: string;
     width: number;
     height: number;
   }
 
-  export interface Medium {
+  export interface IMedium {
     url: string;
     width: number;
     height: number;
   }
 
-  export interface High {
+  export interface IHigh {
     url: string;
     width: number;
     height: number;
   }
 
-  export interface Thumbnails {
-    default: Default;
-    medium: Medium;
-    high: High;
+  export interface IThumbnails {
+    default: IDefault;
+    medium: IMedium;
+    high: IHigh;
   }
 
-  export interface Snippet {
+  export interface ISnippet {
     publishedAt: Date;
     channelId: string;
     title: string;
@@ -44,63 +42,56 @@ export declare module IVideo {
     liveBroadcastContent: string;
   }
 
-  export interface Item {
+  export interface IItem {
     kind: string;
     etag: string;
-    id: Id;
-    snippet: Snippet;
+    id: IId;
+    snippet: ISnippet;
   }
 
-  export interface VideoDetails {
-    contentLength: number,
-    contentType: string,
+  export interface IVideoDetails {
+    contentLength: number;
+    contentType: string;
   }
 
-  export interface RootObject {
+  export interface IRootObject {
     kind: string;
     etag: string;
     nextPageToken: string;
     regionCode: string;
-    pageInfo: PageInfo;
-    items: Item[];
+    pageInfo: IPageInfo;
+    items: IItem[];
   }
 
-  export interface Video{
-    id: string,
-    publishedAt: Date,
-    channelId: string,
-    title: string,
-    description: string,
-    thumbnails: IThumbnails,
-    videoDetails: VideoDetails,
-    duration: string
+  export interface IVideo {
+    id: string;
+    publishedAt: Date;
+    channelId: string;
+    title: string;
+    description: string;
+    thumbnails: IThumbnails;
+    videoDetails: IVideoDetails;
+    duration: string;
   }
 
-  type JSON = IVideoDetails
+  type JSON = IVideoDetails;
 
-export interface IVideoDetails {
-  etag: string;
-  items: IItem[];
-  kind: string;
-  pageInfo: IPageInfo;
-}
-
-export interface IPageInfo {
+  export interface IPageInfo {
   resultsPerPage: number;
   totalResults: number;
 }
 
-export interface IItem {
+  export interface IItem {
   contentDetails: IContentDetails;
   etag: string;
-  id: string;
+  id: IId;
   kind: string;
   player: IPlayer;
   snippet: ISnippet;
   statistics: IStatistics;
 }
 
-export interface ISnippet {
+  export interface ISnippet {
   categoryId: string;
   channelId: string;
   channelTitle: string;
@@ -109,13 +100,13 @@ export interface ISnippet {
   description: string;
   liveBroadcastContent: string;
   localized: ILocalized;
-  publishedAt: string;
+  publishedAt: Date;
   tags: string[];
   thumbnails: IThumbnails;
   title: string;
 }
 
-export interface IThumbnails {
+  export interface IThumbnails {
   default: IDefault;
   high: IHigh;
   maxres: IMaxres;
@@ -123,42 +114,42 @@ export interface IThumbnails {
   standard: IStandard;
 }
 
-export interface IDefault {
+  export interface IDefault {
   height: number;
   url: string;
   width: number;
 }
 
-export interface IMedium {
+  export interface IMedium {
   height: number;
   url: string;
   width: number;
 }
 
-export interface IHigh {
+  export interface IHigh {
   height: number;
   url: string;
   width: number;
 }
 
-export interface IStandard {
+  export interface IStandard {
   height: number;
   url: string;
   width: number;
 }
 
-export interface IMaxres {
+  export interface IMaxres {
   height: number;
   url: string;
   width: number;
 }
 
-export interface ILocalized {
+  export interface ILocalized {
   description: string;
   title: string;
 }
 
-export interface IContentDetails {
+  export interface IContentDetails {
   caption: string;
   definition: string;
   dimension: string;
@@ -167,7 +158,7 @@ export interface IContentDetails {
   projection: string;
 }
 
-export interface IStatistics {
+  export interface IStatistics {
   commentCount: string;
   dislikeCount: string;
   favoriteCount: string;
@@ -175,8 +166,6 @@ export interface IStatistics {
   viewCount: string;
 }
 
-export interface IPlayer {
+  export interface IPlayer {
   embedHtml: string;
-}
-
 }

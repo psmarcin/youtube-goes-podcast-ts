@@ -1,88 +1,84 @@
 
-
-export declare module IChannel {
-
-  export interface PageInfo {
+  export interface IPageInfo {
     totalResults: number;
     resultsPerPage: number;
   }
 
-  export interface Default {
+  export interface IDefault {
     url: string;
     width: number;
     height: number;
   }
 
-  export interface Medium {
+  export interface IMedium {
     url: string;
     width: number;
     height: number;
   }
 
-  export interface High {
+  export interface IHigh {
     url: string;
     width: number;
     height: number;
   }
 
-  export interface Thumbnails {
-    default: Default;
-    medium: Medium;
-    high: High;
+  export interface IThumbnails {
+    default: IDefault;
+    medium: IMedium;
+    high: IHigh;
   }
 
-  export interface Localized {
+  export interface ILocalized {
     title: string;
     description: string;
   }
 
-  export interface Snippet {
+  export interface ISnippet {
     title: string;
     description: string;
     customUrl: string;
     publishedAt: Date;
-    thumbnails: Thumbnails;
-    localized: Localized;
+    thumbnails: IThumbnails;
+    localized: ILocalized;
     country: string;
   }
-  export interface ID {
-    channelId: string
+  export interface IID {
+    channelId: string;
   }
-  export interface Item {
+  export interface IItem {
     kind: string;
     etag: string;
-    id: ID;
-    snippet: Snippet;
+    id: IID;
+    snippet: ISnippet;
   }
 
-  export interface Root {
+  export interface IRoot {
     kind: string;
     etag: string;
-    pageInfo: PageInfo;
-    items: Item[];
+    pageInfo: IPageInfo;
+    items: IItem[];
   }
 
-  export interface Response{
-    body: Root
+  export interface IResponse {
+    body: IRoot;
   }
 
-  export interface Channel {
-    id: string,
-    title: string,
-    description: string,
-    customUrl: string,
-    publishedAt: Date,
+  export interface IChannel {
+    id: string;
+    title: string;
+    description: string;
+    customUrl: string;
+    publishedAt: Date;
     thumbnails: {
       default: string,
       medium: string,
       high: string,
-    },
-    country: string
+    };
+    country: string;
   }
 
-  export interface SerializedChannel {
-    title: string,
-    channelId: string,
-    thumbnail: string
+  export interface ISerializedChannel {
+    title: string;
+    channelId: string;
+    thumbnail: string;
   }
-}
