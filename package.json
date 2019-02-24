@@ -6,10 +6,10 @@
   "scripts": {
     "build:live": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "build": "tsc -p .",
-    "deploy:production": "now alias",
-    "deploy": "now",
+    "deploy": "now && now alias",
     "dev": "npm run build:live | pino-pretty",
     "start": "node ./lib/index.js",
+    "lint": "tslint-config-prettier-check ./tslint.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -31,7 +31,10 @@
     "@types/xmlbuilder": "0.0.34",
     "nodemon": "1.18.10",
     "pino-pretty": "^2.5.0",
+    "prettier": "1.16.4",
     "ts-node": "8.0.2",
+    "tslint": "5.12.1",
+    "tslint-config-prettier": "1.18.0",
     "typescript": "3.3.3"
   },
   "dependencies": {
@@ -43,6 +46,8 @@
     "pino": "^5.11.1",
     "request": "2.88.0",
     "request-promise-native": "1.0.5",
-    "xmlbuilder": "10.1.1"
+    "xmlbuilder": "10.1.1",
+    "ytdl": "0.11.1",
+    "ytdl-core": "0.29.1"
   }
 }

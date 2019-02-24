@@ -1,4 +1,5 @@
 export interface Iconfig {
-  youtubeApiKey?: string,
-  port?: string
+  apiUrl?: string;
+  port?: string;
+  youtubeApiKey?: string;
 }

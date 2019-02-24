@@ -1,3 +1,3 @@
 import Pino from "pino";
 
-export default Pino()
+export default Pino();

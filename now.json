@@ -2,6 +2,7 @@
   "version": 1,
   "alias": "podcasts.psmarcin.me",
   "env":{
+    "API_URL": "https://podcasts.psmarcin.me/",
     "YOUTUBE_API_KEY": "@ps_google_api"
   }
 }
