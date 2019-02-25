@@ -1,17 +1,21 @@
 import Boom from "boom";
 import { NextFunction, Request, Response, Router } from "express";
-import Joi, { ValidationResult } from "joi";
-import request from "request";
-import requestPromis from "request-promise-native";
+import Joi, { ValidationResult, JoiObject } from "joi";
 import log from "./log";
-import {getRedirectLink} from "./video/index";
+import { getRedirectLink } from "./video/index";
 import { get, getAll as getAllChannels, serialize, serializeJSON } from "./youtube/channel";
 import { IChannel } from "./youtube/Ichannel";
 import { IVideo } from "./youtube/Ivideo";
 import { getAll, serialize as videoSerialize } from "./youtube/video";
-
+import { IFeedOptions } from './Iroutes'
 const router = Router({});
 const startedAt = new Date();
+
+const feedOptionsSchema: JoiObject = Joi.object().keys({
+  channelId: Joi.string().required(),
+  count: Joi.number().optional().default(10).max(50).min(1),
+  q: Joi.string().optional()
+})
 
 router.get("/", (req: Request, res: Response): void => {
   res.json({
@@ -21,7 +25,7 @@ router.get("/", (req: Request, res: Response): void => {
 
 router.get("/channels", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {q} = req.query;
+    const { q } = req.query;
     const channels = await getAllChannels(q);
     const serialized = serializeJSON(channels);
     res.json(serialized);
@@ -31,17 +35,21 @@ router.get("/channels", async (req: Request, res: Response, next: NextFunction) 
 });
 
 router.get("/feed/channel/:channelId", async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  const channelIdSchema: Joi.StringSchema = Joi.string().required();
   log.info(`[SERVER] ChannleID: ${req.params.channelId}`);
-  const validationResult: ValidationResult<string> = Joi.validate(req.params.channelId, channelIdSchema);
+  const options: IFeedOptions = {
+    channelId: req.params.channelId,
+    count: req.query.count,
+    q: req.query.q,
+  }
+  const validationResult: ValidationResult<IFeedOptions> = Joi.validate(options, feedOptionsSchema);
 
   if (validationResult.error) {
     return next(Boom.badRequest("ChannelId is not valid"));
   }
   try {
-    const channelId = validationResult.value;
-    const channel: IChannel = await get(channelId);
-    const videos: IVideo[] = await getAll(channelId);
+    const options = validationResult.value;
+    const channel: IChannel = await get(options.channelId);
+    const videos: IVideo[] = await getAll(options);
     const serializedVideos = videoSerialize(videos);
     const serializedChannel = serialize(channel, serializedVideos);
     res.header({ "content-type": "application/xml" }).send(serializedChannel.end({ pretty: true }));
@@ -52,7 +60,7 @@ router.get("/feed/channel/:channelId", async (req: Request, res: Response, next:
 
 router.get("/video/:videoId", async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const {videoId} = req.params;
+    const { videoId } = req.params;
     if (!videoId) {
       throw Boom.badRequest("VideoId is required!");
     }
