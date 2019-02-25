@@ -7,19 +7,20 @@ import {
   IVideoDetails
 } from "./Ivideo";
 import request from "./request";
-
+import { IFeedOptions } from './../Iroutes'
 const VIDEO_BASE_URL = `https://youtube.com/watch?v=`;
 const VIDEO_DIRECT_BASE_URL = `${config.apiUrl}video/`
 
-export async function getAll(channelId: string): Promise<IVideo[]> {
+export async function getAll(options: IFeedOptions): Promise<IVideo[]> {
   let response: any;
   try {
     response = await request.get("search", {
       qs: {
-        channelId,
-        maxResults: 10,
+        channelId: options.channelId,
+        maxResults: options.count,
         order: "date",
         part: "snippet",
+        q: options.q
       },
     });
   } catch (error) {
