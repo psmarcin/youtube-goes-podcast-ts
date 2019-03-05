@@ -1,4 +1,4 @@
-import { config, DotenvConfigOutput, DotenvParseOutput } from "dotenv";
+import { config, DotenvConfigOutput } from "dotenv";
 import Joi, { JoiObject } from "joi";
 import log from "./../log";
 import { Iconfig } from "./interface";
