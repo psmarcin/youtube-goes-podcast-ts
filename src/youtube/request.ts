@@ -6,8 +6,8 @@ const request: RequestAPI<Request, CoreOptions, RequiredUriUrl> = defaults({
   baseUrl: `https://www.googleapis.com/youtube/v3/`,
   json: true,
   qs: {
-    key: config.youtubeApiKey,
-  },
+    key: config.youtubeApiKey
+  }
 });
 
 export default request;
