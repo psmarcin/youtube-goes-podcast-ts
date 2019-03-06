@@ -7,7 +7,7 @@ export default function logger(
   res: Response,
   next: NextFunction
 ): void {
-  const headers: IncomingHttpHeaders = req.headers;
+  const headers: IncomingHttpHeaders = req.headers as IncomingHttpHeaders;
   log.info(`[REQUEST] ${req.method} ${req.path} ${JSON.stringify(headers)}`);
   return next();
 }

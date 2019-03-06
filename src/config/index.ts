@@ -1,12 +1,12 @@
 import { config, DotenvConfigOutput } from "dotenv";
 import Joi, { JoiObject } from "joi";
 import log from "./../log";
-import { Iconfig } from "./interface";
+import { IConfig } from "./index.interface";
 
 const result: DotenvConfigOutput = config();
 
 if (result.error) {
-  log.error(result.error, "Loading environment variables");
+  log.info(result.error, "Can't load environment variables from file");
 }
 
 const envVariablesSchema: JoiObject = Joi.object({
@@ -29,7 +29,7 @@ if (res.error) {
   throw res.error;
 }
 
-let mappedConfig: Iconfig = {};
+let mappedConfig: IConfig = {};
 
 if (res.value) {
   mappedConfig = {

@@ -1,0 +1,9 @@
+{
+  "verbose": true,
+  "debug": false,
+  "exec": "node --inspect -r ts-node/register ./src/index.ts",
+  "ignore": ["node_modules", "./test", "**/*.d.ts", "*.test.ts", "*.spec.ts"],
+  "watch": ["./src"],
+  "ext": "ts",
+  "inspect": true
+}

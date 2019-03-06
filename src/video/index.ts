@@ -1,6 +1,7 @@
 // declare var ytdl: any;
 import Boom from "boom";
 import ytdl, { videoFormat } from "ytdl-core";
+import { IVideoFormat } from "./index.interface";
 
 const containers = "m4a";
 
@@ -8,11 +9,14 @@ export function getRedirectLink(videoId: string): Promise<string> {
   return new Promise((resolve, reject) => {
     ytdl.getInfo(videoId, (err: Error, info: any) => {
       if (err) {
-        throw err;
+        throw Boom.boomify(err, { statusCode: 400 });
       }
-      const audioFormats = ytdl.filterFormats(info.formats, "audioonly");
-      const format: videoFormat | undefined = audioFormats.find(
-        (f: any) => f.container === containers
+      const audioFormats: IVideoFormat[] = ytdl.filterFormats(
+        info.formats,
+        "audioonly"
+      );
+      const format: IVideoFormat | undefined = audioFormats.find(
+        (f: IVideoFormat) => f.container === containers
       );
       if (!format) {
         return reject(
