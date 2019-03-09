@@ -4,10 +4,10 @@ import Joi, { ValidationResult, JoiObject } from "joi";
 import log from "./log";
 import { getRedirectLink } from "./video/index";
 import { get, getAll as getAllChannels, serialize, serializeJSON } from "./youtube/channel";
-import { IChannel } from "./youtube/Ichannel";
-import { IVideo } from "./youtube/Ivideo";
+import { IChannel } from "./youtube/channel.interface";
+import { IVideo } from "./youtube/video.interface";
 import { getAll, serialize as videoSerialize } from "./youtube/video";
-import { IFeedOptions } from './Iroutes'
+import { IFeedOptions } from './routes.interface'
 const router = Router({});
 const startedAt = new Date();
 
@@ -35,11 +35,11 @@ router.get("/channels", async (req: Request, res: Response, next: NextFunction) 
 });
 
 router.get("/feed/channel/:channelId", async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  log.info(`[SERVER] ChannleID: ${req.params.channelId}`);
+  log.info(`[SERVER] ChannelID: ${req.params.channelId}`);
   const options: IFeedOptions = {
     channelId: req.params.channelId,
     count: req.query.count,
-    q: req.query.q,
+    q: req.query.search,
   }
   const validationResult: ValidationResult<IFeedOptions> = Joi.validate(options, feedOptionsSchema);
 

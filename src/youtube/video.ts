@@ -1,9 +1,9 @@
 import Boom from "boom";
 import { head } from "request-promise-native";
 import config from "./../config";
-import { IItem, IVideo, IVideoDetails } from "./Ivideo";
+import { IItem, IVideo, IVideoDetails } from "./video.interface";
 import request from "./request";
-import { IFeedOptions } from "./../Iroutes";
+import { IFeedOptions } from "../routes.interface";
 const VIDEO_BASE_URL = `https://youtube.com/watch?v=`;
 const VIDEO_DIRECT_BASE_URL = `${config.apiUrl}video/`;
 

@@ -6,7 +6,7 @@ import {
   IRoot,
   ISerializedChannel,
   ISnippet
-} from "./Ichannel";
+} from "./channel.interface";
 import request from "./request";
 
 const CHANNEL_BASE_URL = `https://youtube.com/channel/`;
