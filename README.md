@@ -24,3 +24,7 @@ Please keep in mind that this is my side project. I want to learn TypeScript.
 1. `nvm use`
 1. `npm ci`
 1. `npm run dev`
+
+#### Docker
+
+1. `docker-compose up` will run app in development mode and will automatically restart app after file changes in `./src` directory
