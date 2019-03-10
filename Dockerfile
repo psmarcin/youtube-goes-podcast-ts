@@ -5,4 +5,6 @@ RUN npm ci
 COPY . ./
 RUN npm run build
 
-CMD [ "npm start" ]
+EXPOSE 8080
+
+CMD [ "npm", "start" ]
