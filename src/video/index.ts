@@ -1,6 +1,6 @@
 // declare var ytdl: any;
 import Boom from "boom";
-import ytdl, { videoFormat } from "ytdl-core";
+import ytdl from "ytdl-core";
 import { IVideoFormat } from "./index.interface";
 
 const containers = "m4a";

@@ -1,13 +1,13 @@
 import Boom from "boom";
 import { NextFunction, Request, Response, Router } from "express";
-import Joi, { ValidationResult, JoiObject } from "joi";
+import Joi, { JoiObject, ValidationResult } from "joi";
 import log from "./log";
+import { IFeedOptions } from './routes.interface'
 import { getRedirectLink } from "./video/index";
 import { get, getAll as getAllChannels, serialize, serializeJSON } from "./youtube/channel";
 import { IChannel } from "./youtube/channel.interface";
-import { IVideo } from "./youtube/video.interface";
 import { getAll, serialize as videoSerialize } from "./youtube/video";
-import { IFeedOptions } from './routes.interface'
+import { IVideo } from "./youtube/video.interface";
 const router = Router({});
 const startedAt = new Date();
 

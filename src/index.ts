@@ -1,9 +1,9 @@
 import cors from "cors";
 import express, { Express } from "express";
 import config from "./config";
-import { error404Handler, error5xxHandler } from "./middlewares/errors";
 import log from "./log";
 import logMiddleware from "./log/middleware";
+import { error404Handler, error5xxHandler } from "./middlewares/errors";
 import routes from "./routes";
 
 const app: Express = express();
