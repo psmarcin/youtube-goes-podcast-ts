@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p .",
     "deploy": "now && now alias",
-    "deploy:ci": "now -t ${NOWSHTOKEN} && now alias podcast.psmarcin.me -t ${NOWSHTOKEN}",
+    "deploy:ci": "now -t ${NOWSHTOKEN} && now alias podcasts.psmarcin.me -t ${NOWSHTOKEN}",
     "dev": "nodemon | pino-pretty",
     "start": "node ./lib/index.js",
     "lint": "prettier --write ./src/**/*.ts",
