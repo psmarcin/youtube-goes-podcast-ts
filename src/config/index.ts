@@ -15,7 +15,7 @@ const envVariablesSchema: JoiObject = Joi.object({
   YOUTUBE_API_KEY: Joi.string().required()
 });
 
-const res: Joi.ValidationResult<any> = Joi.validate(
+const { value, error }: Joi.ValidationResult<any> = Joi.validate(
   {
     API_URL: process.env.API_URL,
     PORT: process.env.PORT,
@@ -24,18 +24,18 @@ const res: Joi.ValidationResult<any> = Joi.validate(
   envVariablesSchema
 );
 
-if (res.error) {
-  log.error(res.error, `Missing config values`);
-  throw res.error;
+if (error) {
+  log.error(error, `Missing config values`);
+  throw error;
 }
 
 let mappedConfig: IConfig = {};
 
-if (res.value) {
+if (value) {
   mappedConfig = {
-    apiUrl: res.value.API_URL,
-    port: res.value.PORT || "8080",
-    youtubeApiKey: res.value.YOUTUBE_API_KEY
+    apiUrl: value.API_URL,
+    port: value.PORT || "8080",
+    youtubeApiKey: value.YOUTUBE_API_KEY
   };
 }
 
