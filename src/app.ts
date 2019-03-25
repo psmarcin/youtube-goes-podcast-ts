@@ -12,8 +12,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:8081",
-      "podcasts.psmarcin.me",
-      "https://yt.psmarcin.me"
+      "https://yt.psmarcin.me",
+      "https://yt.psmarcin.dev"
     ]
   })
 );
