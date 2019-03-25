@@ -6,3 +6,7 @@ services:
       dockerfile: ./Dockerfile-test
       context: .
     command: npm run test:integration
+    environment:
+      API_URL: ${API_URL}
+      PORT: ${PORT}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
