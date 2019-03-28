@@ -94,33 +94,33 @@ export function serialize(items: IVideo[]): object[] {
 
 function serializeItem(item: IVideo, order: number): object {
   return {
-    guid: {
-      "@isPermalink": false,
-      "#text": item.id
-    },
-    title: item.title,
-    link: `${VIDEO_BASE_URL}${item.id}`,
     description: item.description,
-    pubDate: item.publishedAt.toISOString(),
     enclosure: {
-      "@url": `${VIDEO_DIRECT_BASE_URL}${item.id}`,
+      "@length": item.videoDetails.contentLength || 0,
       "@type": item.videoDetails.contentType || "unknown",
-      "@length": item.videoDetails.contentLength || 0
+      "@url": `${VIDEO_DIRECT_BASE_URL}${item.id}.mp4`
+    },
+    guid: {
+      "#text": item.id,
+      "@isPermalink": false
     },
     "itunes:author": item.channelId,
-    "itunes:subtitle": item.title,
-    "itunes:summary": item.description,
+    "itunes:duration": item.duration,
+    "itunes:explicit": "no",
     "itunes:image": {
       "@href": item.thumbnails.high.url
     },
-    "itunes:duration": item.duration,
-    "itunes:explicit": "no",
-    "itunes:order": order
+    "itunes:order": order,
+    "itunes:subtitle": item.title,
+    "itunes:summary": item.description,
+    link: `${VIDEO_BASE_URL}${item.id}`,
+    pubDate: item.publishedAt.toISOString(),
+    title: item.title
   };
 }
 
 async function getVideoDetails(videoId: string): Promise<IVideoDetails> {
-  const response: any = await head(`${VIDEO_DIRECT_BASE_URL}${videoId}`);
+  const response: any = await head(`${VIDEO_DIRECT_BASE_URL}${videoId}.mp4`);
   return {
     contentLength: response["content-length"],
     contentType: response["content-type"]
