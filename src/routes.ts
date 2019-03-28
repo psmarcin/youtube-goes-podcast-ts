@@ -98,4 +98,9 @@ router.get(
   }
 );
 
+// support old links without extension
+router.get("/video/:videoId", (req, res) => {
+  res.redirect(`/video/${req.params.videoId}.mp4`);
+});
+
 export default router;
