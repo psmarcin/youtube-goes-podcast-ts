@@ -67,9 +67,9 @@ router.get(
       return next(Boom.badRequest("ChannelId is not valid"));
     }
     try {
-      const options = validationResult.value;
-      const channel: IChannel = await get(options.channelId);
-      const videos: IVideo[] = await getAll(options);
+      const values: IFeedOptions = validationResult.value;
+      const channel: IChannel = await get(values.channelId, values.q);
+      const videos: IVideo[] = await getAll(values);
       const serializedVideos = videoSerialize(videos);
       const serializedChannel = serialize(channel, serializedVideos);
       res
