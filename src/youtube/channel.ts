@@ -12,7 +12,10 @@ import request from "./request";
 const CHANNEL_BASE_URL = `https://youtube.com/channel/`;
 const TRANSCODE_BASE_URL = `https://transcoder.plex.tv/photo?height=1500&minSize=1&width=1500&upscale=1&url=`;
 
-export async function get(channelId: string): Promise<IChannel> {
+export async function get(
+  channelId: string,
+  query: string | undefined
+): Promise<IChannel> {
   let response: any;
 
   try {
@@ -34,6 +37,7 @@ export async function get(channelId: string): Promise<IChannel> {
 
   const snippet: ISnippet = resp.items[0].snippet;
 
+  const title = query ? `${snippet.title} - ${query}` : snippet.title;
   const channel: IChannel = {
     country: snippet.country,
     customUrl: snippet.customUrl,
@@ -45,7 +49,7 @@ export async function get(channelId: string): Promise<IChannel> {
       high: snippet.thumbnails.high.url,
       medium: snippet.thumbnails.medium.url
     },
-    title: snippet.title
+    title
   };
 
   return channel;
