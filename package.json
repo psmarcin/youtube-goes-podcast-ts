@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -p .",
-    "dc:test:integration": "docker-compose -f ./docker-compose-test.yml run app",
+    "dc:test:integration": "docker-compose -f ./docker-compose-test.yml up --build",
     "deploy": "now && now alias",
     "deploy:ci": "now -t ${NOWSHTOKEN} && now alias podcasts.psmarcin.me -t ${NOWSHTOKEN}",
     "dev": "nodemon | pino-pretty",

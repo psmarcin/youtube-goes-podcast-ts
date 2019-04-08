@@ -16,7 +16,7 @@ describe("GET /feed/channel/:channelId", () => {
       .persist();
   });
 
-  it("should get 5 elements in response", async () => {
+  it.skip("should get 5 elements in response", async () => {
     const channelId = "UCmrlqFIK_QQCsr3FRHa3OKw";
     const response = await supertest(app)
       .get(`/feed/channel/${channelId}`)
