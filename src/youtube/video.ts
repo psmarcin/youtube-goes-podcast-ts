@@ -5,7 +5,7 @@ import { IItem, IVideo, IVideoDetails } from "./video.interface";
 import request from "./request";
 import { IFeedOptions } from "../routes.interface";
 const VIDEO_BASE_URL = `https://youtube.com/watch?v=`;
-const VIDEO_DIRECT_BASE_URL = `${config.apiUrl}video/`;
+const VIDEO_DIRECT_BASE_URL = `${config.videoUrl}video.mp3?videoId=`;
 
 export async function getAll(options: IFeedOptions): Promise<IVideo[]> {
   let response: any;
@@ -98,7 +98,7 @@ function serializeItem(item: IVideo, order: number): object {
     enclosure: {
       "@length": item.videoDetails.contentLength || 0,
       "@type": item.videoDetails.contentType || "unknown",
-      "@url": `${VIDEO_DIRECT_BASE_URL}${item.id}.mp4`
+      "@url": `${VIDEO_DIRECT_BASE_URL}${item.id}`
     },
     guid: {
       "#text": item.id,

@@ -12,6 +12,7 @@ if (result.error) {
 const envVariablesSchema: JoiObject = Joi.object({
   API_URL: Joi.string().required(),
   PORT: Joi.string().optional(),
+  VIDEO_API_URL: Joi.string().required(),
   YOUTUBE_API_KEY: Joi.string().required()
 });
 
@@ -19,6 +20,7 @@ const { value, error }: Joi.ValidationResult<any> = Joi.validate(
   {
     API_URL: process.env.API_URL,
     PORT: process.env.PORT,
+    VIDEO_API_URL: process.env.VIDEO_API_URL,
     YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY
   },
   envVariablesSchema
@@ -35,6 +37,7 @@ if (value) {
   mappedConfig = {
     apiUrl: value.API_URL,
     port: value.PORT || "8080",
+    videoUrl: value.VIDEO_API_URL,
     youtubeApiKey: value.YOUTUBE_API_KEY
   };
 }
