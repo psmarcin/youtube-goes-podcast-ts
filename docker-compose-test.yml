@@ -10,3 +10,4 @@ services:
       API_URL: ${API_URL}
       PORT: ${PORT}
       YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
+      VIDEO_API_URL: ${VIDEO_API_URL}
