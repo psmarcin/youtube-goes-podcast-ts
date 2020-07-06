@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -p .",
-    "dc:test:integration": "docker-compose -f ./docker-compose-test.yml run app",
+    "dc:test:integration": "docker-compose -f ./docker-compose-test.yml up --build",
     "deploy": "now && now alias",
     "deploy:ci": "now -t ${NOWSHTOKEN} && now alias podcasts.psmarcin.me -t ${NOWSHTOKEN}",
     "dev": "nodemon | pino-pretty",
     "start": "node ./lib/index.js",
-    "lint": "prettier --write ./src/**/*.ts",
+    "lint": "prettier --write ./src/**/*.ts ./tests/*.ts",
     "test": "jest ./src/**/*.spec.ts",
     "test:integration": "jest ./tests/*.spec.ts",
     "test:watch": "npm test -- --watch"
@@ -46,6 +46,7 @@
     "@types/request-promise-native": "1.0.15",
     "@types/supertest": "2.0.7",
     "@types/xmlbuilder": "0.0.34",
+    "fast-xml-parser": "3.12.16",
     "husky": "1.3.1",
     "jest": "24.5.0",
     "lint-staged": "8.1.5",
